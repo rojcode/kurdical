@@ -50,11 +50,17 @@ var epochOffsets = map[Epoch]int{
 // GregorianToKurdish converts a Gregorian time.Time to a KurdishDate.
 func GregorianToKurdish(t time.Time, dialect Dialect, epoch Epoch) KurdishDate {
 	year, month, day := t.Date()
-	sYear, sMonth, sDay := gregorianToSolarHijri(year, int(month), day)
+	return GregorianToKurdishDate(year, int(month), day, dialect, epoch)
+}
+
+// GregorianToKurdishDate converts Gregorian year, month, day to KurdishDate.
+func GregorianToKurdishDate(year, month, day int, dialect Dialect, epoch Epoch) KurdishDate {
+	sYear, sMonth, sDay := gregorianToSolarHijri(year, month, day)
 	kYear := sYear + epochOffsets[epoch]
 	monthName := monthNames[dialect][sMonth-1]
 
-	// Calculate Kurdish weekday: 1=Saturday, 2=Sunday, ..., 7=Friday
+	// Calculate weekday from Gregorian date
+	t := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	weekday := int(t.Weekday())
 	switch weekday {
 	case 0: // Sunday
@@ -86,17 +92,26 @@ func GregorianToKurdish(t time.Time, dialect Dialect, epoch Epoch) KurdishDate {
 
 // KurdishToGregorian converts a KurdishDate to a Gregorian time.Time.
 func KurdishToGregorian(k KurdishDate) (time.Time, error) {
-	if k.Month < 1 || k.Month > 12 {
-		return time.Time{}, &ErrorInvalidMonth{Month: k.Month}
+	year, month, day, err := KurdishToGregorianDate(k.Year, k.Month, k.Day, k.Epoch)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC), nil
+}
+
+// KurdishToGregorianDate converts Kurdish year, month, day to Gregorian year, month, day.
+func KurdishToGregorianDate(kYear, kMonth, kDay int, epoch Epoch) (int, int, int, error) {
+	if kMonth < 1 || kMonth > 12 {
+		return 0, 0, 0, &ErrorInvalidMonth{Month: kMonth}
 	}
 	monthDays := []int{31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29}
-	sYear := k.Year - epochOffsets[k.Epoch]
+	sYear := kYear - epochOffsets[epoch]
 	if isSolarHijriLeap(sYear) {
 		monthDays[11] = 30
 	}
-	if k.Day < 1 || k.Day > monthDays[k.Month-1] {
-		return time.Time{}, &ErrorInvalidDay{Day: k.Day}
+	if kDay < 1 || kDay > monthDays[kMonth-1] {
+		return 0, 0, 0, &ErrorInvalidDay{Day: kDay}
 	}
-	gYear, gMonth, gDay := solarHijriToGregorian(sYear, k.Month, k.Day)
-	return time.Date(gYear, time.Month(gMonth), gDay, 0, 0, 0, 0, time.UTC), nil
+	gYear, gMonth, gDay := solarHijriToGregorian(sYear, kMonth, kDay)
+	return gYear, gMonth, gDay, nil
 }

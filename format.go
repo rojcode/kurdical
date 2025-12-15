@@ -275,15 +275,15 @@ func appendInt(b []byte, x int, width int) []byte {
 	for u >= 10 {
 		i--
 		q := u / 10
-		buf[i] = rune('۰' + u - q*10)
+		buf[i] = rune('٠' + u - q*10)
 		u = q
 	}
 	i--
-	buf[i] = rune('۰' + u)
+	buf[i] = rune('٠' + u)
 
 	// Add 0-padding.
 	for w := len(buf) - i; w < width; w++ {
-		b = append(b, []byte("۰")...)
+		b = append(b, []byte("٠")...)
 	}
 
 	return append(b, []byte(string(buf[i:]))...)
@@ -296,7 +296,7 @@ func formatNano(b []byte, nanosec uint, n int, trim bool) []byte {
 	var buf [9]rune
 	for start := len(buf); start > 0; {
 		start--
-		buf[start] = rune(u%10 + '۰')
+		buf[start] = rune(u%10 + '٠')
 		u /= 10
 	}
 
@@ -304,7 +304,7 @@ func formatNano(b []byte, nanosec uint, n int, trim bool) []byte {
 		n = 9
 	}
 	if trim {
-		for n > 0 && buf[n-1] == '۰' {
+		for n > 0 && buf[n-1] == '٠' {
 			n--
 		}
 		if n == 0 {
