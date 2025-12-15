@@ -1,7 +1,6 @@
 package kurdical
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -164,15 +163,6 @@ func div(a, b int) int {
 
 func mod(a, b int) int {
 	return a % b
-}
-
-// ErrorInvalidYear represents an error for invalid year.
-type ErrorInvalidYear struct {
-	Year int
-}
-
-func (e *ErrorInvalidYear) Error() string {
-	return fmt.Sprintf("invalid year: %d", e.Year)
 }
 
 // isSolarHijriLeap determines if a Solar Hijri year is leap.

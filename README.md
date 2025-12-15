@@ -43,6 +43,22 @@ func main() {
     } else {
         fmt.Printf("Gregorian date: %s\n", g.Format("2006-01-02"))
     }
+
+    // Create a specific Kurdish date and convert to Gregorian
+    // Note: Dialect is optional and not used in conversion, only Epoch matters
+    specificKurdish := kurdical.KurdishDate{
+        Year:    2725,
+        Month:   9,
+        Day:     24,
+        Dialect: kurdical.Sorani, // Optional
+        Epoch:   kurdical.MedianKingdom,
+    }
+    gregorianSpecific, err := kurdical.KurdishToGregorian(specificKurdish)
+    if err != nil {
+        fmt.Println("Error:", err)
+    } else {
+        fmt.Printf("Kurdish 2725-09-24 to Gregorian: %s\n", gregorianSpecific.Format("2006-01-02"))
+    }
 }
 ```
 
@@ -58,6 +74,7 @@ func main() {
 
 - `GregorianToKurdish(t time.Time, dialect Dialect, epoch Epoch) KurdishDate`
 - `KurdishToGregorian(k KurdishDate) (time.Time, error)`
+- `(k KurdishDate) KFormat(layout string) (string, error)`: Formats the Kurdish date using Go time layout strings with Persian digits
 
 ## Kurdish Calendar Details
 

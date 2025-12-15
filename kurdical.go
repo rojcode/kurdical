@@ -1,7 +1,6 @@
 package kurdical
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -66,7 +65,7 @@ func GregorianToKurdish(t time.Time, dialect Dialect, epoch Epoch) KurdishDate {
 // KurdishToGregorian converts a KurdishDate to a Gregorian time.Time.
 func KurdishToGregorian(k KurdishDate) (time.Time, error) {
 	if k.Month < 1 || k.Month > 12 {
-		return time.Time{}, fmt.Errorf("invalid month: %d", k.Month)
+		return time.Time{}, &ErrorInvalidMonth{Month: k.Month}
 	}
 	monthDays := []int{31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29}
 	sYear := k.Year - epochOffsets[k.Epoch]
@@ -74,7 +73,7 @@ func KurdishToGregorian(k KurdishDate) (time.Time, error) {
 		monthDays[11] = 30
 	}
 	if k.Day < 1 || k.Day > monthDays[k.Month-1] {
-		return time.Time{}, fmt.Errorf("invalid day: %d for month %d in year %d", k.Day, k.Month, k.Year)
+		return time.Time{}, &ErrorInvalidDay{Day: k.Day}
 	}
 	gYear, gMonth, gDay := solarHijriToGregorian(sYear, k.Month, k.Day)
 	return time.Date(gYear, time.Month(gMonth), gDay, 0, 0, 0, 0, time.UTC), nil
