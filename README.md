@@ -1,17 +1,27 @@
 # kurdical
 
-A Go module for Kurdish calendar utilities.
+## About the Kurdish Calendar
 
-This module provides conversion between Gregorian and Kurdish calendars, supporting two historical epochs and month names in five Kurdish dialects.
+The Kurdish calendar is an independent solar calendar system with historical offsets aligned to significant events in Kurdish history.
+
+It supports two main historical epochs:
+
+- **Median Kingdom (Diako) epoch**: Starting from the establishment of the Median kingdom by Diako
+- **Fall of Nineveh (Cyaxares) epoch**: Starting from the fall of Nineveh by Cyaxares
+
+The Kurdish year is calculated by adding epoch-specific offsets to the base solar calendar year.
 
 ## Features
 
 - Convert Gregorian dates to Kurdish calendar
 - Convert Kurdish calendar dates back to Gregorian
-- Support for two Kurdish historical epochs:
-  - Median Kingdom (Diako)
-  - Fall of Nineveh (Cyaxares)
+- Support for two historical epochs (Median Kingdom and Fall of Nineveh)
 - Month names in 5 Kurdish dialects: Laki, Hawrami, Sorani, Kalhuri, Kurmanji
+- Display weekdays in Kurdish
+- Format dates with Kurdish digits (٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩)
+- Error handling and date validation
+- 100% test coverage
+- Complete documentation with practical examples
 
 ## Installation
 
@@ -21,7 +31,7 @@ go get github.com/rojcode/kurdical
 
 ## Usage
 
-### Basic Conversion
+### 1. Basic Gregorian to Kurdish Conversion
 
 ```go
 package main
@@ -33,7 +43,6 @@ import (
 )
 
 func main() {
-    // Convert Gregorian to Kurdish
     t := time.Date(2023, 3, 21, 0, 0, 0, 0, time.UTC)
     k := kurdical.GregorianToKurdish(t, kurdical.Sorani, kurdical.MedianKingdom)
     fmt.Printf("Kurdish date: %d-%d-%d %s\n", k.Year, k.Month, k.Day, k.MonthName)
@@ -41,10 +50,9 @@ func main() {
 }
 ```
 
-### Round Trip Conversion
+### 2. Round Trip Conversion
 
 ```go
-// Convert Kurdish to Gregorian
 g, err := kurdical.KurdishToGregorian(k)
 if err != nil {
     fmt.Println(err)
@@ -54,7 +62,7 @@ if err != nil {
 }
 ```
 
-### Different Dialects
+### 3. Different Kurdish Dialects
 
 ```go
 // Sorani dialect
@@ -68,9 +76,17 @@ fmt.Printf("Kurmanji: %s\n", kKurmanji.MonthName) // نیسان
 // Laki dialect
 kLaki := kurdical.GregorianToKurdish(t, kurdical.Laki, kurdical.MedianKingdom)
 fmt.Printf("Laki: %s\n", kLaki.MonthName) // په‌نجه
+
+// Hawrami dialect
+kHawrami := kurdical.GregorianToKurdish(t, kurdical.Hawrami, kurdical.MedianKingdom)
+fmt.Printf("Hawrami: %s\n", kHawrami.MonthName) // نه‌ورۆز
+
+// Kalhuri dialect
+kKalhuri := kurdical.GregorianToKurdish(t, kurdical.Kalhuri, kurdical.MedianKingdom)
+fmt.Printf("Kalhuri: %s\n", kKalhuri.MonthName) // جه‌ژنان (جه‌شنان)
 ```
 
-### Different Epochs
+### 4. Different Historical Epochs
 
 ```go
 // Median Kingdom epoch
@@ -82,7 +98,14 @@ kNineveh := kurdical.GregorianToKurdish(t, kurdical.Sorani, kurdical.FallOfNinev
 fmt.Printf("Fall of Nineveh: %d\n", kNineveh.Year) // 2635
 ```
 
-### Formatting with Kurdish Digits
+### 5. Weekday Display
+
+```go
+fmt.Printf("Weekday: %s\n", kurdical.WeekdayNames[k.Weekday])
+// Output: Weekday: سێ‌شەممە
+```
+
+### 6. Formatting with Kurdish Digits
 
 ```go
 formatted, err := k.KFormat("2006-01-02 January")
@@ -94,22 +117,32 @@ if err != nil {
 }
 ```
 
-### Weekday Display
+### 7. Using Date-Only Functions
 
 ```go
-fmt.Printf("Weekday: %s\n", kurdical.WeekdayNames[k.Weekday])
-// Output: Weekday: سێشەممە (for Tuesday)
+k := kurdical.GregorianToKurdishDate(2023, 3, 21, kurdical.Sorani, kurdical.MedianKingdom)
+fmt.Printf("Kurdish: %d-%d-%d %s\n", k.Year, k.Month, k.Day, k.MonthName)
 ```
 
-### Creating Kurdish Date Manually
+### 8. Converting Kurdish to Gregorian
 
 ```go
-// Create a specific Kurdish date and convert to Gregorian
+gy, gm, gd, err := kurdical.KurdishToGregorianDate(k.Year, k.Month, k.Day, k.Epoch)
+if err != nil {
+    fmt.Println("Error:", err)
+} else {
+    fmt.Printf("Gregorian: %d-%d-%d\n", gy, gm, gd)
+}
+```
+
+### 9. Creating Kurdish Date Manually
+
+```go
 specificKurdish := kurdical.KurdishDate{
     Year:    2725,
     Month:   9,
     Day:     24,
-    Dialect: kurdical.Sorani, // Optional
+    Dialect: kurdical.Sorani,
     Epoch:   kurdical.MedianKingdom,
 }
 gregorianSpecific, err := kurdical.KurdishToGregorian(specificKurdish)
@@ -117,30 +150,13 @@ if err != nil {
     fmt.Println("Error:", err)
 } else {
     fmt.Printf("Kurdish 2725-09-24 to Gregorian: %s\n", gregorianSpecific.Format("2006-01-02"))
-    // Output: Kurdish 2725-09-24 to Gregorian: 2025-12-15
 }
 ```
 
-### Date-Only Functions
+### 10. Invalid Month Error Handling
 
 ```go
-// Using date-only functions without time.Time
-k := kurdical.GregorianToKurdishDate(2023, 3, 21, kurdical.Sorani, kurdical.MedianKingdom)
-fmt.Printf("Kurdish: %d-%d-%d %s\n", k.Year, k.Month, k.Day, k.MonthName)
-
-gy, gm, gd, err := kurdical.KurdishToGregorianDate(k.Year, k.Month, k.Day, k.Epoch)
-if err != nil {
-    fmt.Println("Error:", err)
-} else {
-    fmt.Printf("Gregorian: %d-%d-%d\n", gy, gm, gd)
-    // Output: Gregorian: 2023-3-21
-}
-```
-
-### Error Handling
-
-```go
-// Invalid date
+// Invalid month
 invalidKurdish := kurdical.KurdishDate{
     Year:  2725,
     Month: 13, // Invalid month
@@ -150,6 +166,96 @@ invalidKurdish := kurdical.KurdishDate{
 _, err := kurdical.KurdishToGregorian(invalidKurdish)
 if err != nil {
     fmt.Printf("Error: %s\n", err) // Error: invalid month: 13
+}
+```
+
+### 11. Invalid Day Error Handling
+
+```go
+// Invalid day
+invalidDay := kurdical.KurdishDate{
+    Year:  2725,
+    Month: 1,
+    Day:   32, // Invalid day
+    Epoch: kurdical.MedianKingdom,
+}
+_, err := kurdical.KurdishToGregorian(invalidDay)
+if err != nil {
+    fmt.Printf("Error: %s\n", err) // Error: invalid day: 32 for month 1 in year 2725
+}
+```
+
+### 12. Different Dates of Year
+
+```go
+// January date
+janDate := kurdical.GregorianToKurdishDate(2023, 1, 1, kurdical.Sorani, kurdical.MedianKingdom)
+fmt.Printf("January: %d-%d-%d %s\n", janDate.Year, janDate.Month, janDate.Day, janDate.MonthName)
+
+// December date
+decDate := kurdical.GregorianToKurdishDate(2023, 12, 31, kurdical.Sorani, kurdical.MedianKingdom)
+fmt.Printf("December: %d-%d-%d %s\n", decDate.Year, decDate.Month, decDate.Day, decDate.MonthName)
+```
+
+### 13. Comparing Epochs
+
+```go
+date := time.Date(2023, 6, 15, 0, 0, 0, 0, time.UTC)
+
+median := kurdical.GregorianToKurdish(date, kurdical.Sorani, kurdical.MedianKingdom)
+nineveh := kurdical.GregorianToKurdish(date, kurdical.Sorani, kurdical.FallOfNineveh)
+
+fmt.Printf("Median Kingdom: %d-%d-%d\n", median.Year, median.Month, median.Day)
+fmt.Printf("Fall of Nineveh: %d-%d-%d\n", nineveh.Year, nineveh.Month, nineveh.Day)
+fmt.Printf("Year difference: %d\n", median.Year - nineveh.Year) // 88
+```
+
+### 14. Different Format Layouts
+
+```go
+layouts := []string{
+    "2006-01-02",
+    "2006/01/02 January",
+    "02 Jan 2006",
+    "Monday, 02 January 2006",
+}
+
+for _, layout := range layouts {
+    formatted, _ := k.KFormat(layout)
+    fmt.Printf("Format %s: %s\n", layout, formatted)
+}
+```
+
+### 15. Complete Program Example
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+    "github.com/rojcode/kurdical"
+)
+
+func main() {
+    // Current date
+    now := time.Now()
+    kurdishNow := kurdical.GregorianToKurdish(now, kurdical.Sorani, kurdical.MedianKingdom)
+
+    fmt.Printf("Current Gregorian: %s\n", now.Format("2006-01-02 15:04:05"))
+    fmt.Printf("Current Kurdish: %d-%d-%d %s (%s)\n",
+        kurdishNow.Year, kurdishNow.Month, kurdishNow.Day,
+        kurdishNow.MonthName, kurdical.WeekdayNames[kurdishNow.Weekday])
+
+    // Convert to specific Kurdish date
+    newYearKurdish := kurdical.KurdishDate{
+        Year:  2726,
+        Month: 1,
+        Day:   1,
+        Epoch: kurdical.MedianKingdom,
+    }
+    newYearGregorian, _ := kurdical.KurdishToGregorian(newYearKurdish)
+    fmt.Printf("Kurdish New Year 2726: %s\n", newYearGregorian.Format("2006-01-02"))
 }
 ```
 
@@ -171,14 +277,14 @@ if err != nil {
 
 ## Kurdish Calendar Details
 
-The Kurdish calendar is based on the Solar Hijri calendar with adjusted epochs.
+The Kurdish calendar uses epoch-specific historical adjustments:
 
-- Median Kingdom epoch: Kurdish year = Solar Hijri year + 1321
-- Fall of Nineveh epoch: Kurdish year = Solar Hijri year + 1233
+- Median Kingdom epoch: Kurdish year = Base year + 1321
+- Fall of Nineveh epoch: Kurdish year = Base year + 1233
 
 ## Cultural Notes
 
-This module respects Kurdish cultural heritage by providing accurate month names in authentic dialects. The UTF-8 encoding ensures proper display of Kurdish characters.
+This module respects Kurdish cultural heritage by providing accurate month names in authentic dialects. UTF-8 encoding ensures proper display of Kurdish characters.
 
 ## License
 
