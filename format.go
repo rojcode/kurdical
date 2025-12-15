@@ -97,6 +97,10 @@ func (k KurdishDate) kAppendFormat(b []byte, layout string) ([]byte, error) {
 			b = appendInt(b, month, 0)
 		case stdZeroMonth:
 			b = appendInt(b, month, 2)
+		case stdWeekDay, stdLongWeekDay:
+			if k.Weekday >= 1 && k.Weekday <= 7 {
+				b = append(b, []byte(WeekdayNames[k.Weekday])...)
+			}
 		case stdDay:
 			b = appendInt(b, day, 0)
 		case stdUnderDay:

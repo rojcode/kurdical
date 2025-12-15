@@ -32,18 +32,18 @@ func solarHijriToGregorian(sYear, sMonth, sDay int) (gYear, gMonth, gDay int) {
 type Month int
 
 const (
-	Farvardin Month = 1 + iota
-	Ordibehesht
-	Khordad
-	Tir
-	Mordad
-	Shahrivar
-	Mehr
-	Aban
-	Azar
-	Dey
-	Bahman
-	Esfand
+	Khakelive  Month = 1 + iota // خاکه‌لێوه
+	Gulan                       // گوڵان
+	Jozherdan                   // جۆزه‌ردان
+	Pushper                     // پووشپه‌ڕ
+	Gelavizh                    // گه‌لاوێژ
+	Khereman                    // خه‌رمانان
+	Rezber                      // ره‌زبه‌ر
+	Khezhelwer                  // خه‌زه‌ڵوه‌ر
+	Sermavez                    // سه‌رماوه‌ز
+	Befranbar                   // به‌فرانبار
+	Ribendan                    // رێبه‌ندان
+	Resheme                     // ره‌شه‌مێ
 )
 
 // toJalaali converts Gregorian to Jalaali date.

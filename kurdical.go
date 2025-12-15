@@ -35,6 +35,7 @@ type KurdishDate struct {
 	Year      int
 	Month     int
 	Day       int
+	Weekday   int // 1=Saturday, 2=Sunday, ..., 7=Friday
 	MonthName string
 	Dialect   Dialect
 	Epoch     Epoch
@@ -52,10 +53,31 @@ func GregorianToKurdish(t time.Time, dialect Dialect, epoch Epoch) KurdishDate {
 	sYear, sMonth, sDay := gregorianToSolarHijri(year, int(month), day)
 	kYear := sYear + epochOffsets[epoch]
 	monthName := monthNames[dialect][sMonth-1]
+
+	// Calculate Kurdish weekday: 1=Saturday, 2=Sunday, ..., 7=Friday
+	weekday := int(t.Weekday())
+	switch weekday {
+	case 0: // Sunday
+		weekday = 2
+	case 1: // Monday
+		weekday = 3
+	case 2: // Tuesday
+		weekday = 4
+	case 3: // Wednesday
+		weekday = 5
+	case 4: // Thursday
+		weekday = 6
+	case 5: // Friday
+		weekday = 7
+	case 6: // Saturday
+		weekday = 1
+	}
+
 	return KurdishDate{
 		Year:      kYear,
 		Month:     sMonth,
 		Day:       sDay,
+		Weekday:   weekday,
 		MonthName: monthName,
 		Dialect:   dialect,
 		Epoch:     epoch,

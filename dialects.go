@@ -1,5 +1,17 @@
 package kurdical
 
+// WeekdayNames holds the weekday names for Kurdish (same for all dialects).
+var WeekdayNames = []string{
+	"",          // 0 not used
+	"شەممە",     // Saturday
+	"یەکشەممە",  // Sunday
+	"دووشەممە",  // Monday
+	"سێشەممە",   // Tuesday
+	"چوارشەممە", // Wednesday
+	"پێنجشەممە", // Thursday
+	"هەینی",     // Friday
+}
+
 // monthNames holds the month names for each Kurdish dialect.
 var monthNames = map[Dialect][]string{
 	Laki: {
