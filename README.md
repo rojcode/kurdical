@@ -1,5 +1,7 @@
 # kurdical
 
+[![Go](https://github.com/rojcode/kurdical/actions/workflows/go.yml/badge.svg)](https://github.com/rojcode/kurdical/actions/workflows/go.yml)
+
 ## About the Kurdish Calendar
 
 The Kurdish calendar is an independent solar calendar system with historical offsets aligned to significant events in Kurdish history.
