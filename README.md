@@ -1,12 +1,6 @@
 # kurdical
 
-[![Go](https://github.com/rojcode/kurdical/actions/workflows/go.yml/badge.svg)](https://github.com/rojcode/kurdical/actions/workflows/go.yml)
-
-[![Go Report Card](https://goreportcard.com/badge/github.com/rojcode/kurdical)](https://goreportcard.com/report/github.com/rojcode/kurdical)
-
-[![Go Version](https://img.shields.io/badge/go-%3E%3D1.20-blue)](https://golang.org/dl/)
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Go](https://github.com/rojcode/kurdical/actions/workflows/go.yml/badge.svg)](https://github.com/rojcode/kurdical/actions/workflows/go.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/rojcode/kurdical)](https://goreportcard.com/report/github.com/rojcode/kurdical) [![Go Version](https://img.shields.io/badge/go-%3E%3D1.20-blue)](https://golang.org/dl/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## About the Kurdish Calendar
 
