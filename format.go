@@ -43,7 +43,7 @@ func (k KurdishDate) KFormat(layout string) (string, error) {
 	if bufSize < minBufSize { // minimum buffer size
 		bufSize = minBufSize
 	}
-	b := make([]byte, 0, len(layout))
+	b := make([]byte, 0, bufSize)
 
 	b, err := k.kAppendFormat(b, layout)
 	return string(b), err
@@ -53,10 +53,10 @@ func (k KurdishDate) KFormat(layout string) (string, error) {
 // representation to b and returns the extended buffer.
 func (k KurdishDate) kAppendFormat(b []byte, layout string) ([]byte, error) {
 	var (
-		year  int = -1
+		year  = -1
 		month int
 		day   int
-		hour  int = -1
+		hour  = -1
 		min   int
 		sec   int
 	)

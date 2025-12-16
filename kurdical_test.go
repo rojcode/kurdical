@@ -104,7 +104,7 @@ func TestGregorianToKurdish(t *testing.T) {
 				Month:     10,
 				Day:       11,
 				Weekday:   2,
-				MonthName: "به‌فرانبار",
+				MonthName: "به\u200cفرانبار",
 				Dialect:   Sorani,
 				Epoch:     MedianKingdom,
 			},
